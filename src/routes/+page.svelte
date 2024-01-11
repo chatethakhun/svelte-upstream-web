@@ -1,21 +1,42 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import { login } from "../services/auth";
+
+  import Button from "../components/Button.svelte";
+  import TextInput from "../components/TextInput.svelte";
+
+  import * as yup from "yup";
+  import { createForm } from "svelte-forms-lib";
+  import { failureToast } from "$lib/toastTheme"
+  ;
   const credentials = {
     email: "",
     password: "",
   };
-  const handleLogin = async () => {
-    const form = <HTMLFormElement>document.getElementById("signIn");
-    console.log({ credentials, vali: form?.checkValidity() });
 
-    if (form?.checkValidity()) {
+  let loading = false
+
+  const schema = yup.object().shape({
+    email: yup.string().required("Email is required").email(),
+    password: yup.string().required("Password is required"),
+  });
+
+  const { form, errors, handleSubmit, handleChange } = createForm({
+    initialValues: credentials,
+    validationSchema: schema,
+    onSubmit: async (values) => {
+      const { email, password } = values;
       try {
-        await login(credentials.email, credentials.password);
-        goto('about')
-      } catch (error) {}
-    }
-  };
+        loading = true
+        const response = await login(email, password);
+        console.log(response);
+      } catch (error) {
+        failureToast('Wrong username or password, Please try again')
+      } finally {
+        loading = false
+      }
+      
+    },
+  });
 </script>
 
 <svelte:head>
@@ -39,42 +60,30 @@
           </h1>
           <form
             class="space-y-4 md:space-y-6"
-            action="#"
-            id="signIn"
+            on:submit={handleSubmit}
             novalidate
           >
-            <div>
-              <label
-                for="email"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Your email</label
-              >
-              <input
-                type="email"
-                name="email"
-                id="email"
-                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="name@company.com"
-                bind:value={credentials.email}
-                required
-              />
-            </div>
-            <div>
-              <label
-                for="password"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Password</label
-              >
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="••••••••"
-                bind:value={credentials.password}
-                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-            </div>
-            <div class="flex items-center justify-between">
+            <TextInput
+              type="email"
+              id="email"
+              name="email"
+              label="Email"
+              value={$form.email}
+              errorMessage={$errors.email}
+              placeholder="0iQp5@example.com"
+              onChange={handleChange}
+            />
+            <TextInput
+              type="password"
+              id="password"
+              name="password"
+              label="Password"
+              value={$form.password}
+              errorMessage={$errors.password}
+              placeholder="••••••••"
+              onChange={handleChange}
+            />
+            <!-- <div class="flex items-center justify-between">
               <div class="flex items-start">
                 <div class="flex items-center h-5">
                   <input
@@ -90,17 +99,14 @@
                   >
                 </div>
               </div>
-              <a
-                href="#"
-                class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
-                >Forgot password?</a
-              >
-            </div>
-            <button
+            </div> -->
+            <!-- <button
               type="submit"
               class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              on:click|preventDefault={handleLogin}>Sign in</button
-            >
+              >Sign in</button
+            > -->
+            <Button type="submit" label="Login" {loading} />
+
             <p class="text-sm font-light text-gray-500 dark:text-gray-400">
               Don’t have an account yet? <a
                 href="#"
