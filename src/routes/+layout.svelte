@@ -1,10 +1,16 @@
 <script>
 	import './styles.css';
 	import { SvelteToast } from '@zerodevx/svelte-toast'
+	import Header from '../components/Header.svelte';
+  import { page } from '$app/stores';
+	export let user;
 </script>
 
 <div class="app">
 	<main>
+		{#if $page.data.user}
+			<Header />
+		{/if}
 		<slot />
 	</main>
 	<SvelteToast />

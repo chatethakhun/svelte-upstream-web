@@ -1,5 +1,6 @@
 <script lang="ts">
   import { login } from "../services/auth";
+  import { loginSession } from '../store'
 
   import Button from "../components/Button.svelte";
   import TextInput from "../components/TextInput.svelte";
@@ -27,9 +28,16 @@
       const { email, password } = values;
       try {
         loading = true
-        const response = await login(email, password);
-        console.log(response);
+        const { data: { status: { data: userData }} } = await login(email, password);
+        const user = {
+          ...userData.user,
+          token: userData.token
+        }
+
+        loginSession.set(user)
       } catch (error) {
+        console.log(error);
+        
         failureToast('Wrong username or password, Please try again')
       } finally {
         loading = false
@@ -44,82 +52,60 @@
   <meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section>
-  <section class="bg-gray-50 dark:bg-gray-900">
-    <div
-      class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
-    >
-      <div
-        class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
-      >
-        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-          <h1
-            class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
-          >
-            Sign in to your account
-          </h1>
-          <form
-            class="space-y-4 md:space-y-6"
-            on:submit={handleSubmit}
-            novalidate
-          >
-            <TextInput
-              type="email"
-              id="email"
-              name="email"
-              label="Email"
-              value={$form.email}
-              errorMessage={$errors.email}
-              placeholder="0iQp5@example.com"
-              onChange={handleChange}
-            />
-            <TextInput
-              type="password"
-              id="password"
-              name="password"
-              label="Password"
-              value={$form.password}
-              errorMessage={$errors.password}
-              placeholder="••••••••"
-              onChange={handleChange}
-            />
-            <!-- <div class="flex items-center justify-between">
-              <div class="flex items-start">
-                <div class="flex items-center h-5">
-                  <input
-                    id="remember"
-                    aria-describedby="remember"
-                    type="checkbox"
-                    class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                  />
-                </div>
-                <div class="ml-3 text-sm">
-                  <label for="remember" class="text-gray-500 dark:text-gray-300"
-                    >Remember me</label
-                  >
-                </div>
+
+<section class="bg-white dark:bg-gray-900">
+  <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+      <div class="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
+          <h2 class="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Our Blog</h2>
+          <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">We use an agile approach to test assumptions and connect with the needs of your audience early and often.</p>
+      </div> 
+      <div class="grid gap-8 lg:grid-cols-2">
+          <article class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+              <div class="flex justify-between items-center mb-5 text-gray-500">
+                  <span class="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">
+                      <svg class="mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path></svg>
+                      Tutorial
+                  </span>
+                  <span class="text-sm">14 days ago</span>
               </div>
-            </div> -->
-            <!-- <button
-              type="submit"
-              class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >Sign in</button
-            > -->
-            <Button type="submit" label="Login" {loading} />
-
-            <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-              Don’t have an account yet? <a
-                href="#"
-                class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                >Sign up</a
-              >
-            </p>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
+              <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><a href="#">How to quickly deploy a static website</a></h2>
+              <p class="mb-5 font-light text-gray-500 dark:text-gray-400">Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers influence both web designers and developers.</p>
+              <div class="flex justify-between items-center">
+                  <div class="flex items-center space-x-4">
+                      <img class="w-7 h-7 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png" alt="Jese Leos avatar" />
+                      <span class="font-medium dark:text-white">
+                          Jese Leos
+                      </span>
+                  </div>
+                  <a href="#" class="inline-flex items-center font-medium text-primary-600 dark:text-primary-500 hover:underline">
+                      Read more
+                      <svg class="ml-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                  </a>
+              </div>
+          </article> 
+          <article class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+              <div class="flex justify-between items-center mb-5 text-gray-500">
+                  <span class="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">
+                      <svg class="mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd"></path><path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z"></path></svg>
+                      Article
+                  </span>
+                  <span class="text-sm">14 days ago</span>
+              </div>
+              <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><a href="#">Our first project with React</a></h2>
+              <p class="mb-5 font-light text-gray-500 dark:text-gray-400">Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers influence both web designers and developers.</p>
+              <div class="flex justify-between items-center">
+                  <div class="flex items-center space-x-4">
+                      <img class="w-7 h-7 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png" alt="Bonnie Green avatar" />
+                      <span class="font-medium dark:text-white">
+                          Bonnie Green
+                      </span>
+                  </div>
+                  <a href="#" class="inline-flex items-center font-medium text-primary-600 dark:text-primary-500 hover:underline">
+                      Read more
+                      <svg class="ml-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                  </a>
+              </div>
+          </article>                  
+      </div>  
+  </div>
 </section>
-
-<style>
-</style>

@@ -1,18 +1,20 @@
 <script lang="ts">
   import { Input, Label, Helper, type InputType } from "flowbite-svelte";
-  export let label: string = "Label";
+  export let label: string = "";
   export let placeholder: string = "";
   export let errorMessage: string = "";
   export let id: string;
   export let name: string;
-  export let value: string;
+  export let value: string = "";
   export let type: InputType = "text";
   export let onChange: (event: Event) => any = () => {};
 
 </script>
 
-<div class="mb-6">
-  <Label for={id} color={errorMessage ? "red" : undefined} class="block mb-2">{label}</Label>
+<div>
+  {#if label}
+    <Label for={id} color={errorMessage ? "red" : undefined} class="block mb-2">{label}</Label>
+  {/if}
   <Input
     {type}
     {id}
