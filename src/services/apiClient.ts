@@ -15,13 +15,22 @@ function createAxiosInstanceWithToken(): AxiosInstance {
   return instance;
 }
 
-function createAxiosInstance(): AxiosInstance {
+function createAxiosInstance({ token }: { token: string }): AxiosInstance {
+
+  const headers = {
+    'Content-Type': 'application/json',
+  }
+
+  if(token) {
+    Object.assign(headers, { 'Authorization': `Bearer ${token}` })
+  }
+
+  console.log({ headers });
+  
   const instance = axios.create({
     baseURL: import.meta.env.VITE_API_URL, // Set the base URL for all requests
-    timeout: 5000, // Set a timeout of 5 seconds for all requests
-    headers: {
-      'Content-Type': 'application/json', // Set the Content-Type header to JSON
-    },
+    timeout: 10000, // Set a timeout of 5 seconds for all requests
+    headers: headers
   });
 
   // You can also customize the instance further if needed
@@ -32,4 +41,4 @@ function createAxiosInstance(): AxiosInstance {
 
 // Usage:
 export const axiosWithAuth = createAxiosInstanceWithToken();
-export const axiosInstance = createAxiosInstance();
+export const axiosInstance = (token = '') => createAxiosInstance({ token })
