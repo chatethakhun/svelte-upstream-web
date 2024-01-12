@@ -10,3 +10,5 @@ export const userStore: Writable<User | undefined> = writable({
   name: "",
   token: ""
 })
+
+export const postStore = writable([])

@@ -22,11 +22,9 @@ function createAxiosInstance({ token }: { token: string }): AxiosInstance {
   }
 
   if(token) {
-    Object.assign(headers, { 'Authorization': `Bearer ${token}` })
+    Object.assign(headers, { 'Authorization': `${token}` })
   }
 
-  console.log({ headers });
-  
   const instance = axios.create({
     baseURL: import.meta.env.VITE_API_URL, // Set the base URL for all requests
     timeout: 10000, // Set a timeout of 5 seconds for all requests

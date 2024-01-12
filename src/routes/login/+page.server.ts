@@ -31,11 +31,16 @@ export const actions: Actions = {
 
       await schema.validateSync({ email, password }, { abortEarly: false });
       // login
-      const { data: { status: { data: userData } } } = await login(email, password)
+      const { data: { status: { data: userData } }, headers } = await login(email, password)
 
+      // if(!headers) {
+      //   return
+      // }
+      const token = headers?.get('Authorization')  ?? ''
+      
       const user = {
         ...userData.user,
-        token: userData.token
+        token
       }
 
       
@@ -50,6 +55,7 @@ export const actions: Actions = {
       throw redirect(302, '/');
 
     } catch (error) {
+      console.log('page login server error', error);
       
       if (error instanceof yup.ValidationError) {
         const emailErrorMessage = error.inner.find(inner => inner.path === 'email')?.message
