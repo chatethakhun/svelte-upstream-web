@@ -1,23 +1,12 @@
-<script lang="ts">
-  import { toast } from "@zerodevx/svelte-toast";
+<script>
   import Button from "../../components/Button.svelte";
-  import TextInput from "../../components/TextInput.svelte";
-  import { failureToast } from "$lib/toastTheme";
 
-  toast.pop(0);
+
+  import TextInput from "../../components/TextInput.svelte";
 
   export let form;
 
-  if (form?.serverError) {
-    failureToast(form?.errorMessage);
-  }
 </script>
-
-<svelte:head>
-  <title>Home</title>
-  <meta name="description" content="Svelte demo app" />
-</svelte:head>
-
 <div
   class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
 >
@@ -36,9 +25,8 @@
           id="email"
           name="email"
           label="Email"
-          errorMessage={form?.validateErrors?.email}
+          errorMessage={form?.invalid ? "This field is required" : ""}
           placeholder="abcd@example.com"
-          value={form?.email || ""}
         />
         <TextInput
           type="password"
@@ -46,8 +34,15 @@
           name="password"
           label="Password"
           placeholder="••••••••"
-          errorMessage={form?.validateErrors?.password}
-          value={form?.password || ""}
+          errorMessage={form?.invalid ? "This field is required" : ""}
+        />
+        <TextInput
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          label="Confirm Password"
+          placeholder="••••••••"
+          errorMessage={form?.invalid ? "This field is required" : ""}
         />
         <!-- <div class="flex items-center justify-between">
               <div class="flex items-start">
@@ -71,19 +66,16 @@
               class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >Sign in</button
             > -->
-        <Button type="submit" label="Login" />
+        <Button type="submit" label="Register" />
 
         <p class="text-sm font-light text-gray-500 dark:text-gray-400">
           Don’t have an account yet? <a
-            href="register"
+            href="login"
             class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-            >Register</a
+            >Login</a
           >
         </p>
       </form>
     </div>
   </div>
 </div>
-
-<style>
-</style>

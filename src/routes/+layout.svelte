@@ -11,7 +11,9 @@
 		{#if $page.data.user}
 			<Header />
 		{/if}
+		<section class="bg-gray-50 dark:bg-gray-900">
 		<slot />
+	</section>
 	</main>
 	<SvelteToast />
 </div>
