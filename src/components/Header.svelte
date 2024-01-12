@@ -1,5 +1,5 @@
 <script>
-  import { applyAction, enhance } from '$app/forms';
+  import { applyAction, enhance } from "$app/forms";
   import Button from "./Button.svelte";
   import TextInput from "./TextInput.svelte";
 </script>
@@ -16,7 +16,12 @@
         </a>
       </div>
       <div class="flex items-center lg:order-2 gap-2">
-        <form action="#" method="GET" class="hidden lg:block lg:pl-2">
+        <form
+          action="#"
+          method="GET"
+          class="hidden lg:block lg:pl-2"
+          use:enhance
+        >
           <label for="topbar-search" class="sr-only">Search</label>
           <div class="relative mt-1 lg:w-96">
             <TextInput

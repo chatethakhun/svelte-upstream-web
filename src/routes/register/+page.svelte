@@ -1,10 +1,16 @@
 <script>
+  import { failureToast } from "$lib/toastTheme";
+  import { toast } from "@zerodevx/svelte-toast";
   import Button from "../../components/Button.svelte";
 
 
   import TextInput from "../../components/TextInput.svelte";
 
   export let form;
+  toast.pop(0)
+  if(form?.serverError) {
+    failureToast(form?.errorMessage); 
+  }
 
 </script>
 <div
@@ -21,12 +27,21 @@
       </h1>
       <form class="space-y-4 md:space-y-6" method="POST" novalidate>
         <TextInput
+          id="name"
+          name="name"
+          label="Name"
+          errorMessage={form?.nameErrorMessage}
+          placeholder="Name"
+          value={form?.name || ""}
+        />
+        <TextInput
           type="email"
           id="email"
           name="email"
           label="Email"
-          errorMessage={form?.invalid ? "This field is required" : ""}
+          errorMessage={form?.emailErrorMessage}
           placeholder="abcd@example.com"
+          value={form?.email || ""}
         />
         <TextInput
           type="password"
@@ -34,7 +49,7 @@
           name="password"
           label="Password"
           placeholder="••••••••"
-          errorMessage={form?.invalid ? "This field is required" : ""}
+          errorMessage={form?.passwordErrorMessage}
         />
         <TextInput
           type="password"
@@ -42,7 +57,7 @@
           name="confirmPassword"
           label="Confirm Password"
           placeholder="••••••••"
-          errorMessage={form?.invalid ? "This field is required" : ""}
+          errorMessage={form?.confirmPasswordErrorMessage}
         />
         <!-- <div class="flex items-center justify-between">
               <div class="flex items-start">

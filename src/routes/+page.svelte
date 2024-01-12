@@ -1,6 +1,5 @@
 <script lang="ts">
   import { login } from "../services/auth";
-  import { loginSession } from '../store'
 
   import Button from "../components/Button.svelte";
   import TextInput from "../components/TextInput.svelte";
@@ -21,30 +20,6 @@
     password: yup.string().required("Password is required"),
   });
 
-  const { form, errors, handleSubmit, handleChange } = createForm({
-    initialValues: credentials,
-    validationSchema: schema,
-    onSubmit: async (values) => {
-      const { email, password } = values;
-      try {
-        loading = true
-        const { data: { status: { data: userData }} } = await login(email, password);
-        const user = {
-          ...userData.user,
-          token: userData.token
-        }
-
-        loginSession.set(user)
-      } catch (error) {
-        console.log(error);
-        
-        failureToast('Wrong username or password, Please try again')
-      } finally {
-        loading = false
-      }
-      
-    },
-  });
 </script>
 
 <svelte:head>

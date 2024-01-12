@@ -3,12 +3,25 @@
 	import { SvelteToast } from '@zerodevx/svelte-toast'
 	import Header from '../components/Header.svelte';
   import { page } from '$app/stores';
-	export let user;
+	import { userStore } from '../lib/store'
+
+	export let data
+
+	$:clearUser = data?.clearUser
+
+	$:{
+		if(clearUser) {
+			userStore.set(undefined)
+		}
+	}
+	$page.data.user
+	$userStore = data.user
+
 </script>
 
 <div class="app">
 	<main>
-		{#if $page.data.user}
+		{#if $userStore}
 			<Header />
 		{/if}
 		<section class="bg-gray-50 dark:bg-gray-900">

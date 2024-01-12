@@ -1,8 +1,19 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { login } from '../../services/auth/index.js';
 import { dev } from '$app/environment';
 import * as yup from 'yup';
 import { AxiosError } from 'axios';
+
+export const load = async ({ cookies }) => {
+  const session = cookies.get('session')
+  if(!session) {
+    return { 
+      clearUser: true
+    }
+  }
+
+  return { clearUser: false }
+}
 
 const schema = yup.object().shape({
   email: yup.string().email().required('Email is required'),
@@ -10,9 +21,8 @@ const schema = yup.object().shape({
 })
 
 
-/** @type {import('./$types').Actions} */
-export const actions = {
-  default: async ({ request, cookies }) => {
+export const actions: Actions = {
+  default: async ({ request, cookies, locals }) => {
     const form = await request.formData();
     const email = String(form.get('email')).toLowerCase().trim();
     const password = String(form.get('password'));
@@ -23,11 +33,12 @@ export const actions = {
       // login
       const { data: { status: { data: userData } } } = await login(email, password)
 
-      // console.log({ response });
       const user = {
         ...userData.user,
         token: userData.token
       }
+
+      
       cookies.set('session', JSON.stringify(user), {
         path: '/',
         httpOnly: true,
@@ -36,9 +47,8 @@ export const actions = {
         maxAge: 60 * 60 * 24 * 30
       });
 
-      errors = {};
+      throw redirect(302, '/');
 
-      throw redirect(307, '/');
     } catch (error) {
       
       if (error instanceof yup.ValidationError) {
@@ -50,12 +60,15 @@ export const actions = {
           password: passwordErrorMessage || ''
         }
         
-        return fail(401, { validateErrors: errors, email, password })
+        return fail(401, { validateErrors: errors, email })
       }
 
       if(error instanceof AxiosError) {
         return fail(error?.response?.status || 500, { serverError: true, errorMessage: error?.response?.data })
       }
+
+      throw redirect(302, '/')
+
     }
 
   },
