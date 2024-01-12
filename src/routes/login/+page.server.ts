@@ -13,7 +13,8 @@ export const actions = {
       return fail(400, { invalid: true })
     }
 
-    // login
+    try {
+      // login
     const { data: { status: { data: userData } } } = await login(email, password)
 
     // console.log({ response });
@@ -31,6 +32,9 @@ export const actions = {
 
 
     throw redirect(307, '/');
+    } catch (error) {
+      return fail(401, { wrongCredentials: true })
+    }
 
   },
 }

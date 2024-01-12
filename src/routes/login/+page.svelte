@@ -1,15 +1,16 @@
 <script lang="ts">
-
+  import { toast } from "@zerodevx/svelte-toast";
   import Button from "../../components/Button.svelte";
   import TextInput from "../../components/TextInput.svelte";
+  import { failureToast } from "$lib/toastTheme";
 
-  const credentials = {
-    email: "jack@acme.inc",
-    password: "Password1!",
-  };
-
+  toast.pop(0)
 
   export let form;
+
+  if(form?.wrongCredentials) {
+    failureToast('Wrong Credentials. Please try again')
+  } 
 </script>
 
 <svelte:head>
@@ -31,11 +32,7 @@
           >
             Sign in to your account
           </h1>
-          <form
-            class="space-y-4 md:space-y-6"
-            method="POST"
-            novalidate
-          >
+          <form class="space-y-4 md:space-y-6" method="POST" novalidate>
             <TextInput
               type="email"
               id="email"
@@ -75,6 +72,8 @@
               >Sign in</button
             > -->
             <Button type="submit" label="Login" />
+
+            
 
             <p class="text-sm font-light text-gray-500 dark:text-gray-400">
               Don’t have an account yet? <a
