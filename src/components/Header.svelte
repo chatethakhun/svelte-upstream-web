@@ -20,7 +20,6 @@
           action="#"
           method="GET"
           class="hidden lg:block lg:pl-2"
-          use:enhance
         >
           <label for="topbar-search" class="sr-only">Search</label>
           <div class="relative mt-1 lg:w-96">
@@ -36,11 +35,6 @@
         <form
           action="/auth/logout"
           method="post"
-          use:enhance={async () => {
-            return async ({ result }) => {
-              await applyAction(result);
-            };
-          }}
         >
           <Button type="submit" label="Logout" color="none" />
         </form>
