@@ -16,7 +16,6 @@ function isPathAllowed(path: string) {
 
 export const handle = async ({ event, resolve }) => {
   let user = null
-
   const session = event.cookies.get('session')
 
   

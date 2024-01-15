@@ -6,9 +6,11 @@
 // }
 
 import { postStore } from '$lib/store.js';
+import { AxiosError } from 'axios';
 import { getPosts } from '../services/posts/index.js';
+import { handleRemoveCookie } from '$lib/unAuthenticateResponse.js';
 
-export const load = async ({ locals }) => {
+export const load = async ({ locals, cookies }) => {
   try {
     const { data: { data: posts } } = await getPosts(locals.user?.token);
     postStore.set(posts)
@@ -17,8 +19,9 @@ export const load = async ({ locals }) => {
       user: locals.user,
       posts,
     }
-  } catch (error) {
+  } catch (error: AxiosError | any) {
     console.log('post server load error', error)
+    handleRemoveCookie(error, cookies)
   }
   
 }
