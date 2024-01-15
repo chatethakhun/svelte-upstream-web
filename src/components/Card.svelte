@@ -13,9 +13,9 @@
   class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700"
 >
   <div class="flex justify-between items-center mb-5 text-gray-500">
-    <!-- {#each post.relationships.tags.data as tag}
-      <Tag />
-    {/each} -->
+    {#each post.tags as tag}
+      <Tag tag={tag} />
+    {/each}
     <span class="text-sm">{postedDate}</span>
   </div>
   <h2
