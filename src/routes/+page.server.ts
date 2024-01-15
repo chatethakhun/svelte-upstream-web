@@ -5,7 +5,6 @@
 //   }
 // }
 
-import { postStore } from '$lib/store.js';
 import { AxiosError } from 'axios';
 import { getPosts } from '../services/posts/index.js';
 import { handleRemoveCookie } from '$lib/unAuthenticateResponse.js';
