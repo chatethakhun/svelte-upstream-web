@@ -1,24 +1,14 @@
 interface Post {
-  id: number
-  type: string
-  attributes: PostAttributes
-  meta: PostMeta
-  relationships: PostRelations
-}
-
-interface PostAttributes {
-  content: string,
-  updated_at: Date
+  meta: PostMeta,
+  id:number,
+  content:string,
+  tags: Tag[],
+  created_at: DateTime,
+  updated_at: DateTime,
+  creator: User
 }
 
 interface PostMeta {
   comment_count: number,
   like_count: number,
-}
-
-interface PostRelations {
-  user: {
-    id: number
-  },
-  tags: Tag
 }

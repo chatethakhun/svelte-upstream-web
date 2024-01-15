@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 
 export const handleRemoveCookie = (error: AxiosError, cookies: Cookies) => {
  if(error instanceof AxiosError) {
-  if(error.status === 401) {
+  if(error.response?.status === 401) {
    cookies.delete('session', { path: '/' });
   }
  }

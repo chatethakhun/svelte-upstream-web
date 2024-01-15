@@ -18,12 +18,13 @@ function createAxiosInstanceWithToken(): AxiosInstance {
 function createAxiosInstance({ token }: { token: string }): AxiosInstance {
 
   const headers = {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   }
 
   if(token) {
     Object.assign(headers, { 'Authorization': `${token}` })
   }
+
 
   const instance = axios.create({
     baseURL: import.meta.env.VITE_API_URL, // Set the base URL for all requests
