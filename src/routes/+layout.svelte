@@ -7,13 +7,6 @@
 
   export let data;
 
-  $: clearUser = data?.clearUser;
-
-  $: {
-    if (clearUser) {
-      userStore.set(undefined);
-    }
-  }
   $page.data.user;
   $userStore = data.user;
 </script>
