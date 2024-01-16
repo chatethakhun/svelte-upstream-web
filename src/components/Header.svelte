@@ -1,44 +1,40 @@
-<script>
-  import { applyAction, enhance } from "$app/forms";
+<script lang="ts">
+  import {
+    Navbar,
+    NavBrand,
+    NavHamburger,
+    Avatar,
+    Dropdown,
+    DropdownItem,
+    DropdownHeader,
+    DropdownDivider,
+  } from "flowbite-svelte";
+  import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
   import Button from "./Button.svelte";
-  import TextInput from "./TextInput.svelte";
 </script>
 
-<header class="antialiased">
-  <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
-    <div class="flex flex-wrap justify-between items-center">
-      <div class="flex justify-start items-center">
-        <a href="https://flowbite.com" class="flex mr-4">
-          <span
-            class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-            >Upstream</span
-          >
-        </a>
-      </div>
-      <div class="flex items-center lg:order-2 gap-2">
-        <form
-          action="#"
-          method="GET"
-          class="hidden lg:block lg:pl-2"
-        >
-          <label for="topbar-search" class="sr-only">Search</label>
-          <div class="relative mt-1 lg:w-96">
-            <TextInput
-              id="search"
-              name="search"
-              placeholder="Search"
-              value=""
-            />
-          </div>
-        </form>
-        <Button label="+ Add New Post" />
-        <form
-          action="/auth/logout"
-          method="post"
-        >
-          <Button type="submit" label="Logout" color="none" />
-        </form>
-      </div>
-    </div>
-  </nav>
-</header>
+<Navbar>
+  <NavBrand href="/">
+    <span
+      class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
+      >Upstream</span
+    >
+  </NavBrand>
+  <div class="flex items-center md:order-2">
+    <Avatar id="avatar-menu" src={$page.data.user.thumbnail ?? ""} />
+    <NavHamburger class1="w-full md:flex md:w-auto md:order-1" />
+  </div>
+  <Dropdown placement="bottom" triggeredBy="#avatar-menu">
+    <DropdownHeader>
+      <span class="block text-sm">{$page.data.user.name}</span>
+      <span class="block truncate text-sm font-medium"
+        >{$page.data.user.email}</span
+      >
+    </DropdownHeader>
+    <DropdownItem on:click={() => goto("profile")}>Profile</DropdownItem>
+    <form action="/auth/logout" method="post">
+      <Button type="submit" label="Logout" color="none" />
+    </form>
+  </Dropdown>
+</Navbar>
